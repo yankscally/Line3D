@@ -36,8 +36,9 @@ func set_material(prop):
 	update_line(width,smooth,segments,interval,material)
 
 func _ready():
-	curve = load("res://addons/line_3d/default_curve.tres").duplicate()
-	for child in get_children(): child.queue_free()
+	if curve == null:
+		curve = load("res://addons/line_3d/default_curve.tres").duplicate()
+	for child in get_children(): if child is CSGPolygon3D: child.queue_free()
 	instance = CSGPolygon3D.new()
 	instance.mode = CSGPolygon3D.MODE_PATH
 	add_child(instance,true,0)
@@ -59,5 +60,4 @@ func update_line(width, smooth, segments, interval, material):
 	instance.material = material
 	instance.path_interval = interval
 	# TODO elif shape == 2: # Ribbon/Flat ??
-	# TODO elif shape == 3: # X ??
 
