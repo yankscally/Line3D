@@ -38,6 +38,13 @@ func set_material(prop):
 func _ready():
 	if curve == null:
 		curve = load("res://addons/line_3d/default_curve.tres").duplicate()
+		if point_a or point_b == null:
+			curve.set_point_position(0,point_a)
+			curve.set_point_position(1,point_b)
+		#else:
+			#curve.set_point_position(0,point_a)
+			#curve.set_point_position(1,point_b)
+
 	for child in get_children(): if child is CSGPolygon3D: child.queue_free()
 	instance = CSGPolygon3D.new()
 	instance.mode = CSGPolygon3D.MODE_PATH
@@ -47,7 +54,7 @@ func _ready():
 	update_line(width, smooth, segments, interval, material)
 
 func update_line(width, smooth, segments, interval, material):
-	print(get_children())
+
 	var radius = width / 2.0
 	var circle_polygon = []
 	for i in range(segments):
@@ -55,9 +62,14 @@ func update_line(width, smooth, segments, interval, material):
 		var x = radius * cos(angle)
 		var y = radius * sin(angle)
 		circle_polygon.append(Vector2(x, y))
-	instance.polygon = PackedVector2Array(circle_polygon)
-	instance.smooth_faces = smooth
-	instance.material = material
-	instance.path_interval = interval
+	if instance == null:
+		pass
+	else:
+		instance.polygon = PackedVector2Array(circle_polygon)
+		instance.smooth_faces = smooth
+		instance.material = material
+		instance.path_interval = interval
+		point_a = curve.get_point_position(0)
+		point_b = curve.get_point_position(1)
 	# TODO elif shape == 2: # Ribbon/Flat ??
 
